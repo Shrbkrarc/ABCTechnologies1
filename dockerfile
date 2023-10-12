@@ -1,4 +1,4 @@
-FROM docker.io/library/Ubuntu:18.04.3
+FROM docker.io/library/ubuntu:18.04.3
 RUN apt-get -y update && apt-get -y upgrade
 RUN apt-get -y install openjdk-11-jdk wget
 RUN mkdir /opt/tomcat
