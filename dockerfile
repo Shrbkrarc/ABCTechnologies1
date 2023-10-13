@@ -5,8 +5,7 @@ RUN mkdir /opt/tomcat
 ADD https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.94/bin/apache-tomcat-8.5.94.tar.gz /tmp/apache-tomcat-8.5.94.tar.gz
 RUN cd /tmp && tar xvfz apache*.tar.gz
 RUN sudo su
-RUN mv apache-tomcat-8.5.94/* /opt/tomcat/.
-WORKDIR /opt/tomcat/webapps
-ADD **/*.war /opt/tomcat/webapps
+RUN cp -Rv apache-tomcat-8.5.94/* /usr/local/tomcat/.
+ADD **/*.war /usr/local/tomcat/webapps
 EXPOSE 8080
-CMD ["/opt/tomcat/bin/catalina.sh", "run"]
+CMD ["/usr/local/tomcat/bin/catalina.sh", "run"]
