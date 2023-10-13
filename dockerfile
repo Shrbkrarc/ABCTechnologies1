@@ -4,7 +4,6 @@ RUN apt-get -y install openjdk-11-jdk wget
 RUN mkdir /opt/tomcat
 ADD https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.94/bin/apache-tomcat-8.5.94.tar.gz /tmp/apache-tomcat-8.5.94.tar.gz
 RUN cd /tmp && tar xvfz apache*.tar.gz
-RUN sudo su
 RUN cp -Rv apache-tomcat-8.5.94/* /usr/local/tomcat/.
 ADD **/*.war /usr/local/tomcat/webapps
 EXPOSE 8080
