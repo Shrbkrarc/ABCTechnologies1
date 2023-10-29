@@ -1,10 +1,2 @@
-FROM docker.io/library/ubuntu:18.04
-RUN apt-get -y update && apt-get -y upgrade
-RUN apt-get -y install openjdk-11-jdk wget
-RUN mkdir /usr/local/tomcat
-ADD https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.94/bin/apache-tomcat-8.5.94.tar.gz /tmp/apache-tomcat-8.5.94.tar.gz
-RUN cd /tmp && tar xvfz apache-tomcat-8.5.94.tar.gz
-RUN cp -Rv /tmp/apache-tomcat-8.5.94/* /usr/local/tomcat/
-ADD **/*.war /usr/local/tomcat/webapps/
-EXPOSE 8080
-CMD /usr/local/tomcat/bin/catalina.sh run
+FROM tomcat:9.0.82-jre17
+COPY target/ABC*.war /usr/local/tomcat/webapps/ABC*.war
