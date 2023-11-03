@@ -2,8 +2,8 @@
   become: yes
   connection: local
   tasks:
-        - name: login to docker hub
-          command: docker login -u shrutir20 -p Docker@2023May09
+        # - name: login to docker hub
+        #   command: docker login -u shrutir20 -p Docker@2023May09
         - name: build docker image
           command: docker build -t . shrutir20/abctechmavenprj
         - name: push image to docker hub
