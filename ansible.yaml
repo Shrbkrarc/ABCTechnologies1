@@ -7,7 +7,7 @@
         - name: build docker image
           command: docker build -t shrutir20/abctechmavenprj .
         - name: login to docker hub
-          command: sudo docker login -u shrutir20 -p Docker@2023May09  
+          command: cat password.txt | docker login -u shrutir20 --password-stdin
         - name: push image to docker hub
           command: docker push shrutir20/abctechmavenprj
         # - name: Build an image and push it to a private repo
