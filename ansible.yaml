@@ -10,8 +10,8 @@
   tasks:
     - name: start a container
       community.docker.docker_container:
-        name: abc-dockercontainer
-        image: abdulpurduedevops/abctechnologies:{{ lookup('env', 'BUILDNUM') }}
+        name: abc-container
+        image: shrutir20/abc_prj_gcp:latest
         state: started
         ports:
           - 2255:8080
@@ -38,13 +38,12 @@
               spec:
                 containers:
                 - name: my-container
-                  image: abdulpurduedevops/abctechnologies:{{ lookup('env', 'BUILDNUM') }}
+                  image: shrutir20/abc_prj_gcp:latest
                   ports:
                   - containerPort: 80
         namespace: "{{ customnamespace }}"
       register: deployment_out
-      vars:
-        build_number: "{{ lookup('env', 'BUILDNUM') }}"
+      
 
     - name: Create a Service
       kubernetes.core.k8s:
@@ -65,8 +64,7 @@
               targetPort: 8080
         namespace: "{{ customnamespace }}"
       register: service_out
-      vars:
-        build_number: "{{ lookup('env', 'BUILDNUM') }}"
+   
 
     - name: Debug Container Output
       debug:
