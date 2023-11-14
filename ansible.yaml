@@ -1,40 +1,26 @@
 - hosts: localhost
+  gather_facts: no
   become: yes
   connection: local
+  collections:
+    - community.docker
+    - kubernetes.core
+  vars:
+    customnamespace: default
   tasks:
-        # - name: login to docker hub
-        #   command: docker login -u shrutir20 -p Docker@2023May09
-        - name: build docker image
-          command: docker build -t shrutir20/abctechmavenprj:v1 .
-        - name: login to docker hub
-          command: echo "Docker@2023May09" | docker login --username shrutir20 --password-stdin
-        - name: push image to docker hub
-          command: docker push shrutir20/abctechmavenprj:v1
-        # - name: Build an image and push it to a private repo
-        #   community.docker.docker_image:
-        #       build:
-        #           path: "/home/edureka/Desktop"
-        #       name: docker.io/shrutir20/abctechmavenprj
-        #       #tag: test
-        #       push: true
-        #       source: build
-        #   register: out
-        # - debug:
-        #       var: out  
-        - name: start a container
-          community.docker.docker_container:
-             name: abc-application
-             image: shrutir20/abctechmavenprj
-             state: started
-             ports:
-                 - 1234:8080
-             #restart: true
-          register: out
-        - debug:
-              var: out
-             #- name: Deploying to kubernetes
-        - name: Create a Deployment by reading the definition from a local file 
-          command: "kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f /home/edureka/Desktop/deployment.yml"    
-          register: out
-        - debug:
-              var: out
+    - name: start a container
+      community.docker.docker_container:
+        name: abc-dockercontainer
+        image: shrutir20/abc_prj_gcp:{{ lookup('env', 'BUILDNUM') }}
+        state: started
+        ports:
+          - 2255:8080
+        register: container_out
+    - debug:
+        var: out
+    #- name: Deploying to kubernetes
+    - name: Create a Deployment by reading the definition from a local file 
+        command: "kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f /home/edureka/Desktop/deployment.yml"    
+        register: out
+    - debug:
+        var: out
