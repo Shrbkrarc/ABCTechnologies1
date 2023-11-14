@@ -11,16 +11,71 @@
     - name: start a container
       community.docker.docker_container:
         name: abc-dockercontainer
-        image: shrutir20/abc_prj_gcp:{{ lookup('env', 'BUILDNUM') }}
+        image: abdulpurduedevops/abctechnologies:{{ lookup('env', 'BUILDNUM') }}
         state: started
         ports:
           - 2255:8080
-        register: container_out
-    - debug:
-        var: out
-    #- name: Deploying to kubernetes
-    - name: Create a Deployment by reading the definition from a local file 
-        command: "kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f /home/edureka/Desktop/deployment.yml"    
-        register: out
-    - debug:
-        var: out
+      register: container_out
+
+    - name: Create a Deployment
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: abc-k8s-deployment
+            namespace: "{{ customnamespace }}"
+          spec:
+            replicas: 2
+            selector:
+              matchLabels:
+                app: abc-webapp
+            template:
+              metadata:
+                labels:
+                  app: abc-webapp
+              spec:
+                containers:
+                - name: my-container
+                  image: abdulpurduedevops/abctechnologies:{{ lookup('env', 'BUILDNUM') }}
+                  ports:
+                  - containerPort: 80
+        namespace: "{{ customnamespace }}"
+      register: deployment_out
+      vars:
+        build_number: "{{ lookup('env', 'BUILDNUM') }}"
+
+    - name: Create a Service
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: abc-nodeportservice
+            namespace: "{{ customnamespace }}"
+          spec:
+            type: NodePort
+            selector:
+              app: abc-webapp
+            ports:
+            - name: http
+              port: 80
+              targetPort: 8080
+        namespace: "{{ customnamespace }}"
+      register: service_out
+      vars:
+        build_number: "{{ lookup('env', 'BUILDNUM') }}"
+
+    - name: Debug Container Output
+      debug:
+        var: container_out
+
+    - name: Debug Deployment Output
+      debug:
+        var: deployment_out
+
+    - name: Debug Service Output
+      debug:
+        var: service_out
