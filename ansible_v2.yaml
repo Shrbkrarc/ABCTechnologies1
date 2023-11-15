@@ -4,6 +4,7 @@
 - name: Deploy Docker image to Kubernetes
   hosts: localhost
   become: true
+  connection: local   
   tasks:
     - name: Deploy Kubernetes Deployment
       k8s:
