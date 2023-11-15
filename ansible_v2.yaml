@@ -1,8 +1,34 @@
-- hosts: localhost
-  become: yes
+# deploy_kubernetes.yml
+
+---
+- name: Deploy Docker image to Kubernetes
+  hosts: localhost
+  become: true
   tasks:
-        - name: Create a Deployment by reading the definition from a local file 
-          command: "kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f /home/edureka/Desktop/deployment.yml"    
-          register: out
-        - debug:
-              var: out
+    - name: Deploy Kubernetes Deployment
+      k8s:
+        api_version: apps/v1
+        kind: Deployment
+        name: abc-deployment
+        namespace: default
+        definition:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: abc-deployment
+            namespace: default
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: abc-app
+            template:
+              metadata:
+                labels:
+                  app: abc-app
+              spec:
+                containers:
+                - name: abc-container
+                  image: shrutir20/abc_prj_gcp:latest
+                  ports:
+                  - containerPort: 80
